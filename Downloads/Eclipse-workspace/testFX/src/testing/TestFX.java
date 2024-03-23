@@ -1,8 +1,7 @@
 package testing;
 
+import java.util.*;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,7 +11,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class TestFX extends Application {
+	
 	private Scene previousScene;
+	
+	private static int catCount = 0;
+	public static HashMap<Integer, Group> categories = new HashMap<>();
+	
+	private static int locCount = 0;
+	public static HashMap<Integer, Group> locations = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {
@@ -25,12 +31,12 @@ public class TestFX extends Application {
     	Button assetBtn = new Button("View All Assets");
     	
     	// Button for defining new category
-    	Button defCatBtn = new Button("Define New Category");
-    	defCatBtn.setOnAction(event -> define(primaryStage, "category"));
+    	Button defCatBtn = new Button("Add New Category");
+    	defCatBtn.setOnAction(event -> define(primaryStage, "Category"));
     	
-    	// Button for defining new category
-    	Button defLocBtn = new Button("Define New Location");
-    	defLocBtn.setOnAction(event -> define(primaryStage, "location"));
+    	// Button for defining new location
+    	Button defLocBtn = new Button("Add New Location");
+    	defLocBtn.setOnAction(event -> define(primaryStage, "Location"));
     	
     	// Create UI layout
         VBox root = new VBox(10);
@@ -44,31 +50,94 @@ public class TestFX extends Application {
     	primaryStage.show();
     }
     
+    public static void main(String[] args) {
+        launch(args);
+    }
+    
+    // Private helper methods
+    
     // Method for defining asset type
-    public void define(Stage primaryStage, String funct) {
-		// Create label and text field
-		Label label = new Label("Enter " + funct + " name:");
-		TextField textField = new TextField();
+    private void define(Stage primaryStage, String functName) {
+		// Create prompt label
+		Label defLabel = new Label("Enter " + functName + " name:");
 		
-		// Create buttons for saving and going back
-		Button saveBtn = new Button("Save");
+		// Create warning labels
+		Label empDefWarnLabel = new Label(functName + "'s name is required!");
+		Label repDefWarnLabel = new Label(functName + " already exist! Please enter a unique " + functName + ".");
+		empDefWarnLabel.setVisible(false);
+		repDefWarnLabel.setVisible(false);
+		
+		// Text fiels for entering name of category or location
+		TextField defTextField = new TextField();
+		
+		// Create buttons
+		Button saveBtn = new Button("Submit");
 		Button backBtn = new Button("Back");
+		
+		// Create UI layout 
+		VBox root = new VBox(10);
+		root.getChildren().addAll(defLabel, defTextField, saveBtn, backBtn);
+		root.setAlignment(Pos.CENTER);
+		
+		// Set buttons' actions
+		saveBtn.setOnAction(event -> save(primaryStage, root, functName, defTextField, empDefWarnLabel, repDefWarnLabel));
 		Scene previousScene = primaryStage.getScene();
 		backBtn.setOnAction(event -> primaryStage.setScene(previousScene));
 		
-		// Create UI layout 
-		VBox catRoot = new VBox(10);
-		catRoot.getChildren().addAll(label, textField, saveBtn, backBtn);
-		catRoot.setAlignment(Pos.CENTER);
-		
         // Set the scene
-        primaryStage.setScene(new Scene(catRoot, 300, 200));
+        primaryStage.setScene(new Scene(root, 300, 200));
 
         // Show the stage
     	primaryStage.show();
 	}
-
-    public static void main(String[] args) {
-        launch(args);
+    
+    // Save button action, shows warning
+    private void save(Stage primaryStage, VBox box, String functType, TextField functName, Label emptyWarning, Label repeatedWarning) {
+    	
+    	// If nothing was entered into the textfield
+    	if (functName.getText().isEmpty()) {
+    		emptyWarning.setVisible(true);
+    		box.getChildren().add(emptyWarning);
+    		return;
+    	}
+    	emptyWarning.setVisible(false);
+    	String groupName = functName.getText();
+       
+        // I'll turn this into a private method in the future
+        if (functType.equals("Category")) {
+            // Add category if search not found
+            if (search(categories, groupName) == -1) {
+                Group group = new Group(groupName, functType);
+                categories.put(catCount, group);
+                
+                repeatedWarning.setVisible(false);
+                return;
+            }
+        }
+        if (functType.equals("Location")) {
+        	// Add location if search not found
+            if (search(locations, groupName) == -1) {
+                Group group = new Group(groupName, functType);
+                locations.put(locCount, group);
+                emptyWarning.setVisible(false);
+                repeatedWarning.setVisible(false);
+                return;
+            }
+        }
+        
+        repeatedWarning.setVisible(true);
+        box.getChildren().add(repeatedWarning);
     }
+    
+    // Search hashmap and return id
+    private int search (HashMap<Integer, Group> hashmap, String name) {
+        for (Map.Entry<Integer, Group> entry : hashmap.entrySet()) {
+            if (entry.getValue().getName().equals(name)) {
+                int key = entry.getKey();
+                return key;
+            }
+        }
+    	return -1;
+    } 
+
 }
