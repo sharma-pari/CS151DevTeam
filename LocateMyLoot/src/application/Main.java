@@ -13,25 +13,40 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+	//private Scene previousScene;
 	
-	private Scene previousScene;
-	
-	public static int catId = 0;
+	public static Integer catId = 0;
 	public static HashMap<Integer, Category> categories = new HashMap<>();
-	public static int locId = 0;
+	public static Integer locId = 0;
 	public static HashMap<Integer, Location> locations = new HashMap<>();
 
     @Override
     public void start(Stage primaryStage) {
+    	loadData();
+    	
     	primaryStage.setTitle("Welcome to Locate My Loot!");
     	
     	// Create label
     	Label label = new Label("What would you like to do?");
+    	label.setFont(new Font("Impact", 35));
+        label.setStyle("-fx-font-weight: italic;");
+        label.setStyle("-fx-text-fill: red;");
+        BackgroundFill lblBackgroundFill = new BackgroundFill(Color.WHITE, new CornerRadii(3), javafx.geometry.Insets.EMPTY);
+        Background lblBackground = new Background(lblBackgroundFill);
+        label.setBackground(lblBackground);
     	
     	// Button for viewing current assets, or view by category or location
     	Button assetBtn = new Button("View All Assets");
@@ -45,9 +60,13 @@ public class Main extends Application {
     	Button defLocBtn = new Button("Add New Location");
     	defLocBtn.setOnAction(event -> define(primaryStage, "Location"));
     	
+    	// Button for Saving data
+    	Button defSaveBtn = new Button("Save");
+    	defSaveBtn.setOnAction(event -> DataHandler.saveData(categories, locations, catId, locId));
+    	
     	// Create UI layout
         VBox root = new VBox(10);
-        root.getChildren().addAll(label, assetBtn, defCatBtn, defLocBtn);
+        root.getChildren().addAll(label, assetBtn, defCatBtn, defLocBtn, defSaveBtn);
         root.setAlignment(Pos.CENTER);
 
         // Set the scene
@@ -62,6 +81,14 @@ public class Main extends Application {
     }
     
     // Private helper methods
+    
+    // Loads data from previous session;
+    private void loadData() {
+    	catId = DataHandler.loadCatId();
+    	locId = DataHandler.loadLocId();
+    	categories = DataHandler.loadCategoriesFromCSV();
+    	locations = DataHandler.loadLocationsFromCSV();
+    }
     
     // Shows assets by attributes
     private void viewAssets(Stage primaryStage) {
