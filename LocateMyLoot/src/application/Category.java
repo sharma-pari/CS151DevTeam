@@ -1,34 +1,24 @@
 package application;
 
-import java.util.ArrayList;
+public class Category extends Attribute {
+	
+	public Category() {
+		super();
+		super.setFilePath("categories.csv");
+	}
+	
+	public Category(String name, String descr) {
+		super(name,descr);
+		super.setFilePath("categories.csv");
+	}
+	
+	public Category(String csv) {
+		super(csv);
+		super.setFilePath("categories.csv");
+	}
 
-public class Category implements Attribute{
-    private String name;
-    private String desc;
-    private ArrayList<String> list;
-
-    public Category(String name) {
-        this.name = name;
-    }
-    
-    @Override
-    public void setName(String name) {
-    	this.name = name;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-    
-    @Override
-    public void setDesc(String desc) {
-    	this.desc = desc;
-    }
-
-    @Override
-    public String getDesc() {
-        return desc;
-    }
-
+	@Override
+	public String save() {
+		return super.save();
+	}
 }
