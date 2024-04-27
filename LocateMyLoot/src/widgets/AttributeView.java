@@ -10,6 +10,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 /**
@@ -19,10 +21,15 @@ import javafx.stage.Stage;
 public class AttributeView extends VBox {
 
     private Label defLabel;
-    private final TextField defTextField = new TextField();
+    private final TextField nameTextField = new TextField();
     private final TextArea desc = new TextArea();
     private Label messageLabel = new Label();
+	private Button saveBtn = new Button("Save");
+    private Button backBtn = new Button("Back");
+    
     private Stage primaryStage;
+    
+    private Label warningLabel;
     
     //Modal for the view
     private Attribute attr = null;
@@ -40,26 +47,35 @@ public class AttributeView extends VBox {
     }
 
     private void createView() {
-    	defLabel = new Label("Enter " + this.attr.getClass().getName() + " name:");
-    	defTextField.setMaxWidth(300);
+    	createWarningMarkers();
+    	
+    	defLabel = new Label("Enter " + this.attr.getClass().getSimpleName() + " name:");
+    	
+    	nameTextField.setMaxWidth(300);
+    	HBox box1 = new HBox(10);
+    	box1.setAlignment(Pos.CENTER);
+    	box1.getChildren().addAll(nameTextField,warningLabel);
+    	
     	desc.setMaxWidth(300);
     	desc.setPromptText("Enter Asset's description");
 
-    	defTextField.setPromptText("E.g. Spoon, Phone, Medicine ...");
-
-    	Button saveBtn = new Button("Save");
-        Button backBtn = new Button("Back");
+    	nameTextField.setPromptText("E.g. Spoon, Phone, Medicine ...");
 
         HBox btnPanel = new HBox(10);
         btnPanel.getChildren().addAll(saveBtn, backBtn);
         btnPanel.setAlignment(Pos.CENTER);
 
         this.getChildren().addAll(
-        		defLabel, defTextField,
+        		defLabel, box1,
         		desc, btnPanel, messageLabel
         );
 
         saveBtn.setOnAction(event -> {
+        	clearMessaagesAndWarnings(); //clear previous messages or warnings if any
+        	if(!checkMandatoryFields())
+        	{
+        		return;
+        	}
         	updateModal();
         	String message = attr.save();
         	clearNodes();
@@ -73,35 +89,63 @@ public class AttributeView extends VBox {
     public void show(String title) {
     	primaryStage.setTitle(title);
         this.setAlignment(Pos.CENTER);
-        primaryStage.setScene(new Scene(this, 500, 500));
+        primaryStage.setScene(new Scene(this, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT));
         primaryStage.show();
     }
     
     //get the user entered values from Nodes to the modal - asset
     private void updateModal() {
-    	attr.setName(defTextField.getText());
-    	attr.setDesc(desc.getText());
+    	attr.setName(nameTextField.getText().replace(",", " ")); //strip off commas if any
+    	attr.setDesc(desc.getText().replace(",", " ")); //strip off commas if any
     }
     
     //updates the nodes based on the Modal ( values in asset)
     private void updateView() {
-    	clearMessage();
-    	defTextField.setText(attr.getName());
+    	clearMessaagesAndWarnings();
+    	nameTextField.setText(attr.getName());
     	desc.setText(attr.getDesc());
     }
+    
+    private void createWarningMarkers() {
+    	warningLabel = new Label("*");
+    	warningLabel.setTextFill(Color.RED); // Set text color to red
+    	warningLabel.setFont(new Font(20)); // Set font size to 16
+    	warningLabel.setVisible(false); 
+    }
+    
+    private boolean checkMandatoryFields() {
+    	
+    	boolean mndatoryFields = true;
+        if(nameTextField.getText().isBlank()) {
+        	warningLabel.setVisible(true);
+        	mndatoryFields = false;
+        }
+        showWarning("Fields marked with * are Manadatory");
+        return mndatoryFields;
+    }
+
     
     //clear the contents of the View
     private void clearNodes() {
         
-    	defTextField.clear();
+    	nameTextField.clear();
     	desc.clear();
+    }
+    
+    private void showWarning(String message) {
+    	messageLabel.setText(message);
+    	messageLabel.setTextFill(Color.RED);
+    	messageLabel.setFont(new Font(16)); // Set font size to 16
     }
     
     private void showMessage(String message) {
     	messageLabel.setText(message);
+    	messageLabel.setTextFill(Color.BLACK);
+    	messageLabel.setFont(new Font(16)); // Set font size to 16
     }
     
-    private void clearMessage() {
+    private void clearMessaagesAndWarnings() {
     	messageLabel.setText(null);
+		warningLabel.setVisible(false);
     }
 }

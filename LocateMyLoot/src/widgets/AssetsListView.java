@@ -59,7 +59,7 @@ public class AssetsListView extends VBox{
 		
 		this.getChildren().addAll(assetTable,btnBox );
 
-		Scene scene = new Scene(this, 400, 300);
+		Scene scene = new Scene(this, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT);
         primaryStage.setScene(scene);
         primaryStage.setTitle("View Assets");
         primaryStage.show();
@@ -73,7 +73,7 @@ public class AssetsListView extends VBox{
 	        AssetView defRoot = new AssetView(primaryStage);
 	        defRoot.setAsset(selectedAsset);
 	        defRoot.setAlignment(Pos.CENTER);
-	        primaryStage.setScene(new Scene(defRoot, 500, 500));
+	        primaryStage.setScene(new Scene(defRoot, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT));
 	        primaryStage.setTitle("Edit Asset");
 	        primaryStage.show();
         }

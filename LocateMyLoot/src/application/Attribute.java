@@ -17,7 +17,7 @@ public abstract class Attribute {
 	}
 	
 	public Attribute(String csv) {
-		String[] parts = csv.split(",");
+		String[] parts = csv.split(",", -1);
         if (parts.length >= 2) {
             this.setName(parts[0]);
             this.setDesc(parts[1]);

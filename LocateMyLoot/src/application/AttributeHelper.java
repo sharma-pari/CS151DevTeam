@@ -29,14 +29,14 @@ public class AttributeHelper {
     	if(!searchAtt(fileName, attr)) {
 	        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName, true))) {
 	            writer.println(attr.toString());
-	            return "Attribute " + attr.getName() + " saved successfully";
+	            return attr.getName() + " saved successfully";
 	        } catch (IOException e) {
 	            e.printStackTrace();
 	            return "Something went Horribly wrong";
 	        }
     	}
     	else {
-    		return "Attribute " + attr.getName() + "already Exists";
+    		return attr.getName() + "already Exists";
     	}
     }
 

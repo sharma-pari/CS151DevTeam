@@ -16,18 +16,19 @@ public class AssetHelper {
 	
     //parse the asset line and create and asset
     private static Asset parseAsset(String assetLine) {
-    	String[] items = assetLine.split(",");
-    	
-    	Asset asset = new Asset();
-    	asset.setName(items[0]); 
-    	asset.setDescr(items[1]);
-    	asset.setLocation(new Location(items[2], items[3]));
-    	asset.setCategory(new Category(items[4], items[5]));
-    	asset.setPurchaseDate(items[6]);
-    	asset.setPurChaseValue(items[7]);
-    	asset.setWarExDate(items[8]);
-    	
-    	return asset;
+    	String[] items = assetLine.split(",", -1);
+    	if(items.length > 0) {
+	    	Asset asset = new Asset();
+	    	asset.setName((items[0] != null ? items[0] : "")); 
+	    	asset.setDescr((items[1] != null ? items[1] : ""));
+	    	asset.setLocation(new Location((items[2] != null ? items[2] : ""), (items[3] != null ? items[3] : "")));
+	    	asset.setCategory(new Category((items[4] != null ? items[4] : ""), (items[5] != null ? items[5] : "")));
+	    	asset.setPurchaseDate((items[6] != null ? items[6] : ""));
+	    	asset.setPurChaseValue((items[7] != null ? items[7] : ""));
+	    	asset.setWarExDate((items[8] != null ? items[8] : ""));
+	    	return asset;
+    	}
+    	return null;
     }
     
     public static void save(Asset asset) {
@@ -77,7 +78,7 @@ public class AssetHelper {
     	return statusDelete;
     }
 	
-	public static boolean updateAsset(Asset assetToUpdate, Asset updatedAsset) {
+	public static boolean updateAsset(Asset oldAsset, Asset updatedAsset) {
 		
 		boolean statusUpdate = true;
 		
@@ -95,7 +96,7 @@ public class AssetHelper {
             while ((currentLine = reader.readLine()) != null) {
                 Asset assetRead = parseAsset(currentLine);
                 
-                if (assetToUpdate == assetRead) { //calls the equals method in Asset class
+                if (oldAsset.equals(assetRead)) { //calls the equals method in Asset class
                 	currentLine = updatedAsset.toString();
                 }
                 writer.write(currentLine + System.getProperty("line.separator"));
@@ -122,7 +123,10 @@ public class AssetHelper {
         try (BufferedReader br = new BufferedReader(new FileReader(assetFileName))) {
             String line;
             while ((line = br.readLine()) != null) {
-            	assets.add(parseAsset(line));
+            	Asset asset = parseAsset(line);
+            	if(asset != null) {
+            		assets.add(parseAsset(line));
+            	}
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +141,7 @@ public class AssetHelper {
         	
             String line;
             while ((line = br.readLine()) != null) {
-            	String assetName = line.split(",")[0];
+            	String assetName = line.split(",", -1)[0];
                 if (assetName.toLowerCase().contains(name.toLowerCase())) { //case insensitive search
                     Asset asset = parseAsset(line);
                     searchResults.add(asset);

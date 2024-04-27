@@ -1,5 +1,7 @@
 package application;
 
+import java.util.Objects;
+
 public class Asset {
     private String name;
     private Location location;
@@ -12,6 +14,23 @@ public class Asset {
     
     public Asset() {
     	
+    }
+    
+    //create an asset from the passed in asset
+    public Asset(Asset asset) {
+    	this.name = asset.name;
+    	this.descr = asset.descr;
+    	if(location != null) {
+	    	this.location.setName(asset.location.getName());
+	    	this.location.setDesc(asset.location.getDesc());
+    	}
+    	if(category != null) {
+	    	this.category.setName(asset.category.getName());
+	    	this.category.setDesc(asset.category.getDesc());
+    	}
+    	this.purchaseDate = asset.purchaseDate;
+    	this.purChaseValue = asset.purchaseDate;
+    	this.warExDate = asset.warExDate;
     }
     
     public Asset(String name, Location location, Category category, String descr, String purchaseDate, String warExDate,
@@ -83,6 +102,24 @@ public class Asset {
 	}
 
 	
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Asset other = (Asset) obj;
+		return Objects.equals(name, other.name);
+	}
+
 	//Red Lipstick,Red and Glossy,Bathroom,Makeup Cabinets in Bathroom,Make Up,make up Items,2024-04-10,12.29,2024-05-15
 	@Override
 	public String toString() {

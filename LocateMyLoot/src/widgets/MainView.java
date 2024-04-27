@@ -1,9 +1,7 @@
 package widgets;
 
-import java.util.List;
+import java.util.stream.Stream;
 
-import application.Asset;
-import application.AssetHelper;
 import application.AttributeType;
 import application.Category;
 import application.Location;
@@ -15,6 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainView extends VBox {
+	
+	public static final int MAIN_WINDOW_WIDTH = 1000;
+	public static final int MAIN_WINDOW_HEIGHT = 500;
 	
 	private Stage primaryStage;
 	private Label label;
@@ -67,9 +68,14 @@ public class MainView extends VBox {
         // Create UI layout
         this.getChildren().addAll(label, assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, exit);
         this.setAlignment(Pos.CENTER);
+        
+
+        // Set the preferred width for each Button to the maximum width
+        Stream.of(assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, exit )
+              .forEach(button -> button.setPrefWidth(200));
 
         // Set the scene
-        primaryStage.setScene(new Scene(this, 400, 300));
+        primaryStage.setScene(new Scene(this, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT));
 
         // Show the stage
         primaryStage.show();
@@ -86,21 +92,13 @@ public class MainView extends VBox {
     
     private void showAttributeView(AttributeType atrType) {
         if(atrType == AttributeType.CATEGORY) {
-        	
         	AttributeView categoryView = new AttributeView(primaryStage, new Category());
         	categoryView.show("Add Category");
-//        	primaryStage.setTitle("Add Category");
-//            this.setAlignment(Pos.CENTER);
-//            primaryStage.setScene(new Scene(this, 500, 500));
         }
         else if(atrType == AttributeType.LOCATION) {
            	AttributeView locationView = new AttributeView(primaryStage, new Location());
            	locationView.show("Add Location");
-//        	primaryStage.setTitle("Add Location");
-//            defRoot.setAlignment(Pos.CENTER);
-//            primaryStage.setScene(new Scene(defRoot, 500, 500));
         }
-        //primaryStage.show();
     }
     
     //Show AssetView

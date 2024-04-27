@@ -21,4 +21,32 @@ public class CSVHelper {
         }
         return names;
     }
+    
+    public static List<Location> CSVtoLocations(String fileName) {
+        List<Location> locs = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                Location temp = new Location(line);
+                locs.add(temp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return locs;
+    }
+    
+    public static List<Category> CSVtoCategories(String fileName) {
+        List<Category> cats = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+            	Category temp = new Category(line);
+                cats.add(temp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return cats;
+    }
 }

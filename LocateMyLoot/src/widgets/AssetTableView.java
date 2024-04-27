@@ -24,16 +24,34 @@ public class AssetTableView extends TableView<TableRowData> {
         TableColumn<TableRowData, String> assetDescr = new TableColumn<>("Asset Description");
         assetDescr.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getAssetDescr()));
 
-        // Create and populate second column
+        // Category Columns
         TableColumn<TableRowData, String> categoryName = new TableColumn<>("Category");
-        categoryName.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getAssetCategory()));
+        categoryName.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getAssetCategory())); 
+        
+        TableColumn<TableRowData, String> categoryDescr = new TableColumn<>("Category Description");
+        categoryDescr.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCatDescr()));
 
-        // Create and populate second column
+        
+        //LOcation columns
         TableColumn<TableRowData, String> locationName = new TableColumn<>("Location");
         locationName.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getAssetLocation()));
+ 
+        TableColumn<TableRowData, String> locationDescr = new TableColumn<>("Location Description");
+        locationDescr.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getAssetLocDescr()));
 
+        TableColumn<TableRowData, String> priceColumn = new TableColumn<>("Price");
+        priceColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getPurchasePrice()));
+        
+        TableColumn<TableRowData, String> purchDateColumn = new TableColumn<>("Purchase Date");
+        purchDateColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getPurchDate()));
+        
+        TableColumn<TableRowData, String> expDateColumn = new TableColumn<>("Expiry Date");
+        expDateColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getExpDate()));
+        
         // Add both columns to table
-        this.getColumns().addAll(assetName, assetDescr, categoryName, locationName);
+        this.getColumns().addAll(assetName, assetDescr, categoryName, categoryDescr, 
+        		locationName, locationDescr, priceColumn, 
+        		purchDateColumn, expDateColumn);
 	}
 	
 	public void setAssets(List<Asset> assets) {
