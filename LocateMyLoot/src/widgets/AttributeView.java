@@ -116,7 +116,7 @@ public class AttributeView extends VBox {
     private boolean checkMandatoryFields() {
     	
     	boolean mndatoryFields = true;
-        if(nameTextField.getText().isBlank()) {
+        if(nameTextField.getText().isEmpty()) {
         	warningLabel.setVisible(true);
         	mndatoryFields = false;
         }
