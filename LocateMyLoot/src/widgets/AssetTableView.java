@@ -55,6 +55,12 @@ public class AssetTableView extends TableView<TableRowData> {
 	}
 	
 	public void setAssets(List<Asset> assets) {
+		if(this.assets != null) {	
+			//remove previous data
+			for(int i=0; i < tableData.size(); i++) {
+				tableData.remove(i);
+			}
+		}
 		this.assets = assets;
 	}
 	

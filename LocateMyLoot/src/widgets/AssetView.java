@@ -209,14 +209,14 @@ public class AssetView extends VBox {
     	locComboBox.setValue(asset.getLocation().getName());
     	catComboBox.setValue(asset.getCategory().getName());
     	
-    	if(!asset.getPurchaseDate().isEmpty() && !asset.getPurchaseDate().isEmpty()) {
+    	if(!asset.getPurchaseDate().isEmpty()) {
 	    	LocalDate purDate = LocalDate.parse(asset.getPurchaseDate()); // Parse the string into a LocalDate object
 	    	purDateDP.setValue(purDate); // Set the date in the DatePicker
     	}
 
     	purVal.setText(asset.getPurChaseValue());
     	
-    	if(!asset.getWarExDate().isEmpty() && !asset.getWarExDate().isEmpty()) {
+    	if(!asset.getWarExDate().isEmpty()) {
 	    	LocalDate warExpDate = LocalDate.parse(asset.getPurchaseDate()); // Parse the string into a LocalDate object
 	    	warExpDP.setValue(warExpDate);
     	}

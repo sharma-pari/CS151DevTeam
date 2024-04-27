@@ -90,10 +90,8 @@ public class SearchView extends VBox {
 		List<Asset> searchResults = AssetHelper.searchAsset(searchtext.getText());
 		
 		if (searchResults.size() > 0) {
-			
 			searchResultsView.setAssets(searchResults);
 			searchResultsView.refreshView();
-
 		}
 	}
 	
