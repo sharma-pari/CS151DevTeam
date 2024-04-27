@@ -155,15 +155,15 @@ public class AssetView extends VBox {
     private boolean checkMandatoryFields() {
     	
     	boolean mndatoryFields = true;
-        if(txtName.getText().isBlank()) {
+        if(txtName.getText().isEmpty()) {
         	warningLabels.get(0).setVisible(true);
         	mndatoryFields = false;
         }
-        if(locComboBox.getValue() == null || locComboBox.getValue().toString().isBlank()) {
+        if(locComboBox.getValue() == null || locComboBox.getValue().toString().isEmpty()) {
         	warningLabels.get(1).setVisible(true);
         	mndatoryFields = false;
         }
-        if(catComboBox.getValue() == null || catComboBox.getValue().toString().isBlank()) {
+        if(catComboBox.getValue() == null || catComboBox.getValue().toString().isEmpty()) {
         	warningLabels.get(2).setVisible(true);
         	mndatoryFields = false;
         }
@@ -209,14 +209,14 @@ public class AssetView extends VBox {
     	locComboBox.setValue(asset.getLocation().getName());
     	catComboBox.setValue(asset.getCategory().getName());
     	
-    	if(!asset.getPurchaseDate().isBlank() && !asset.getPurchaseDate().isEmpty()) {
+    	if(!asset.getPurchaseDate().isEmpty() && !asset.getPurchaseDate().isEmpty()) {
 	    	LocalDate purDate = LocalDate.parse(asset.getPurchaseDate()); // Parse the string into a LocalDate object
 	    	purDateDP.setValue(purDate); // Set the date in the DatePicker
     	}
 
     	purVal.setText(asset.getPurChaseValue());
     	
-    	if(!asset.getWarExDate().isBlank() && !asset.getWarExDate().isEmpty()) {
+    	if(!asset.getWarExDate().isEmpty() && !asset.getWarExDate().isEmpty()) {
 	    	LocalDate warExpDate = LocalDate.parse(asset.getPurchaseDate()); // Parse the string into a LocalDate object
 	    	warExpDP.setValue(warExpDate);
     	}
