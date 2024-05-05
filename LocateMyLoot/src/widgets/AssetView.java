@@ -35,6 +35,8 @@ public class AssetView extends VBox {
     private final TextField purVal = new TextField();
     private final DatePicker warExpDP = new DatePicker();
     private Label messageLabel = new Label();
+    private Button saveBtn = new Button("Save");
+    private Button backBtn = new Button("Back");
     
     List<Location> locations;
     List<Category> categories;
@@ -83,8 +85,8 @@ public class AssetView extends VBox {
         locComboBox.setMaxWidth(300);
         catComboBox.setMaxWidth(300);
         
-        locations = CSVHelper.CSVtoLocations("locations.csv");
-        categories = CSVHelper.CSVtoCategories("categories.csv");
+        locations = CSVHelper.CSVtoLocations(Location.LOCATIONS_FILENAME);
+        categories = CSVHelper.CSVtoCategories(Category.CATEGORIES_FILENAME);
         
         locComboBox.getItems().addAll(getLocationNames());
         locComboBox.setPromptText("Select a location");
@@ -109,10 +111,6 @@ public class AssetView extends VBox {
         warExpDP.setMaxWidth(300);
         warExpDP.setPromptText("Choose an expiration date");
         
- 
-        Button saveBtn = new Button("Save");
-        Button backBtn = new Button("Back");
-
         HBox btnPanel = new HBox(10);
         btnPanel.getChildren().addAll(saveBtn, backBtn);
         btnPanel.setAlignment(Pos.CENTER);
@@ -133,6 +131,7 @@ public class AssetView extends VBox {
         	updateModal();
         	if(prevAsset == null) {
         		AssetHelper.save(asset);
+        		asset = null;
         	}
         	else {
         		AssetHelper.updateAsset(prevAsset, asset);
@@ -227,8 +226,10 @@ public class AssetView extends VBox {
         
     	txtName.clear();
     	desc.clear();
-        locComboBox.setValue(null);
-        catComboBox.setValue(null);
+        //locComboBox.setValue(null);
+        locComboBox.setPromptText("Select a location");
+        catComboBox.setPromptText("Select a category");
+        //catComboBox.setValue(null);
         purDateDP.setValue(null);
         purVal.clear();
         warExpDP.setValue(null);

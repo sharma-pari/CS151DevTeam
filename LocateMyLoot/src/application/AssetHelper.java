@@ -32,10 +32,22 @@ public class AssetHelper {
     }
     
     public static void save(Asset asset) {
-        try (FileWriter writer = new FileWriter(assetFileName, true)) { // Append mode
+    	
+    	FileWriter writer = null;
+    	try {
+    		writer = new FileWriter(assetFileName, true); // Append mode
             writer.write(asset.toString() + "\n");
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+	        if (writer != null) {
+	            try {
+	                writer.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
         }
     }
 	
