@@ -65,6 +65,7 @@ public class AssetTableView extends TableView<TableRowData> {
 	}
 	
 	public void refreshView() {
+		tableData.clear();
         if(assets != null) {
             for (Asset asset : assets) {
                 tableData.add(new TableRowData(asset));
