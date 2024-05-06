@@ -215,10 +215,11 @@ public class AssetView extends VBox {
 
     	purVal.setText(asset.getPurChaseValue());
     	
-    	if(!asset.getWarExDate().isEmpty()) {
-	    	LocalDate warExpDate = LocalDate.parse(asset.getPurchaseDate()); // Parse the string into a LocalDate object
-	    	warExpDP.setValue(warExpDate);
-    	}
+    	String warrantyExpDateStr = asset.getWarExDate();
+        if (warrantyExpDateStr != null && !warrantyExpDateStr.isEmpty()) {
+            LocalDate warExpDate = LocalDate.parse(warrantyExpDateStr);
+            warExpDP.setValue(warExpDate);
+        }
     }
     
     //clear the contents of the View
