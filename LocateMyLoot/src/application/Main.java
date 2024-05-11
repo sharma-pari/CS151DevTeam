@@ -13,8 +13,6 @@ public class Main extends Application {
     	WarningPopUp warning = new WarningPopUp(primaryStage);
     	warning.show();
 
-//    	MainView mainView = new MainView(primaryStage);
-//    	mainView.show();
     }
 
     public static void main(String[] args) {

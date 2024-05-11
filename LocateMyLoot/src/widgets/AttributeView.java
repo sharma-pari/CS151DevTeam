@@ -49,7 +49,7 @@ public class AttributeView extends VBox {
     private void createView() {
     	createWarningMarkers();
     	
-    	defLabel = new Label("Enter " + this.attr.getClass().getSimpleName() + " name:");
+    	defLabel = new Label("Enter " + this.attr.getClass().getSimpleName().toLowerCase() + " name:");
     	
     	nameTextField.setMaxWidth(300);
     	HBox box1 = new HBox(10);
@@ -57,7 +57,7 @@ public class AttributeView extends VBox {
     	box1.getChildren().addAll(nameTextField,warningLabel);
     	
     	desc.setMaxWidth(300);
-    	desc.setPromptText("Enter Asset's description");
+    	desc.setPromptText("Enter " + this.attr.getClass().getSimpleName().toLowerCase() + "'s description");
 
     	nameTextField.setPromptText("E.g. Spoon, Phone, Medicine ...");
 

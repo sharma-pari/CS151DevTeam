@@ -61,7 +61,7 @@ public class MainView extends VBox {
         searchBtn.setOnAction(event -> showSearchView());
         
         // Button for viewing expired assets
-        searchBtn = new Button("View Expired Warranty Assets");
+        searchBtn = new Button("View Expired Assets");
         searchBtn.setOnAction(event -> viewExpAssets());
         
         //Button for exiting application
@@ -122,7 +122,5 @@ public class MainView extends VBox {
     private void viewExpAssets() {
     	WarningPopUp wpu = new WarningPopUp(primaryStage);
     	wpu.showExpiredView(); 
-//        ExpiredView expiredView = new ExpiredView(primaryStage, expAssets);
-//        expiredView.show();
     }
 }

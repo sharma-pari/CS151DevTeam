@@ -29,7 +29,7 @@ public class ExpiredView extends VBox {
 
     public void show() {
 
-        //"OK" button navigates to main page
+        // "OK" button navigates to main page
         Button mainBtn = new Button("OK");
         mainBtn.setOnAction(event -> {
         	MainView mainView = new MainView(primaryStage);
@@ -44,6 +44,7 @@ public class ExpiredView extends VBox {
         backBtn.setOnAction(event -> primaryStage.setScene(previousScene));
         
         HBox hbox = new HBox(10);
+        hbox.setAlignment(Pos.CENTER);
         hbox.getChildren().addAll(mainBtn, backBtn);
         
         this.setAlignment(Pos.CENTER);
@@ -52,7 +53,7 @@ public class ExpiredView extends VBox {
 
 		Scene scene = new Scene(this, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("View Assets");
+        primaryStage.setTitle("View Expired Assets");
         primaryStage.show();
     }
     
