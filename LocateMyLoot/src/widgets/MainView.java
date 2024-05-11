@@ -24,6 +24,7 @@ public class MainView extends VBox {
 	private Button defLocBtn;
 	private Button defAssBtn;
 	private Button searchBtn;
+	private Button expWarBtn;
 	private Button exit;
 	
 	public MainView(Stage primaryStage) {
@@ -58,6 +59,10 @@ public class MainView extends VBox {
         // Button for defining new asset
         searchBtn = new Button("Search Asset");
         searchBtn.setOnAction(event -> showSearchView());
+        
+        // Button for viewing expired assets
+        searchBtn = new Button("View Expired Warranty Assets");
+        searchBtn.setOnAction(event -> viewExpAssets());
         
         //Button for exiting application
         exit = new Button("Exit");
@@ -112,4 +117,12 @@ public class MainView extends VBox {
     	SearchView search = new SearchView(primaryStage);
     	search.show();
     }    
+    
+    // Shows assets by attributes
+    private void viewExpAssets() {
+    	WarningPopUp wpu = new WarningPopUp(primaryStage);
+    	wpu.showExpiredView(); 
+//        ExpiredView expiredView = new ExpiredView(primaryStage, expAssets);
+//        expiredView.show();
+    }
 }

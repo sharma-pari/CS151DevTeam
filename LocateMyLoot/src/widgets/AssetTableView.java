@@ -32,7 +32,7 @@ public class AssetTableView extends TableView<TableRowData> {
         categoryDescr.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCatDescr()));
 
         
-        //LOcation columns
+        // Location columns
         TableColumn<TableRowData, String> locationName = new TableColumn<>("Location");
         locationName.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getAssetLocation()));
  

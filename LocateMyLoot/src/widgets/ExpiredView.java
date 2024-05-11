@@ -1,40 +1,64 @@
 package widgets;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import application.Asset;
+import application.AssetHelper;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class ExpiredView {
+public class ExpiredView extends VBox {
+	
+	private AssetTableView expiredAssetTable;
+	Stage primaryStage;
+	List<Asset> expAssets;
+	
+    public ExpiredView(Stage primaryStage, List<Asset> expAssets) {
+    	super(10);
+    	this.primaryStage = primaryStage;
+    	this.expAssets = expAssets;
+    	expiredAssetTable = new AssetTableView();
+    }
 
     public void show() {
-        // Create a new stage for the warning popup
-        Stage view = new Stage();
-        view.setTitle("Expired Warranties");
-
-        Label messageLabel = new Label("Empty, add stuff for expired view");
 
         //"OK" button navigates to main page
-        Button mainButton = new Button("OK");
-        mainButton.setOnAction(event -> {
-            view.close();
+        Button mainBtn = new Button("OK");
+        mainBtn.setOnAction(event -> {
+        	MainView mainView = new MainView(primaryStage);
+        	mainView.show();
         });
         
+        populateTable();
+        
+        // A button to go back
+    	Button backBtn = new Button("Back");
+        Scene previousScene = primaryStage.getScene();
+        backBtn.setOnAction(event -> primaryStage.setScene(previousScene));
+        
+        HBox hbox = new HBox(10);
+        hbox.getChildren().addAll(mainBtn, backBtn);
+        
+        this.setAlignment(Pos.CENTER);
+        this.setPadding(new Insets(20));
+    	this.getChildren().addAll(expiredAssetTable, hbox);
 
-        // Create layout
-        VBox layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
-        layout.setPadding(new Insets(20));
-        layout.getChildren().addAll(messageLabel, mainButton);
-
-        // Set the scene
-        Scene scene = new Scene(layout);
-        view.setScene(scene);
-
-        // Show the stage
-        view.showAndWait();
+		Scene scene = new Scene(this, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("View Assets");
+        primaryStage.show();
+    }
+    
+    // Populates expired asset's table
+    private void populateTable() {    	
+    	expiredAssetTable.setAssets(expAssets);
+    	expiredAssetTable.refreshView();
     }
 }

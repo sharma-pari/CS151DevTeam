@@ -10,11 +10,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
     	
-    	WarningPopUp warning = new WarningPopUp();
+    	WarningPopUp warning = new WarningPopUp(primaryStage);
     	warning.show();
 
-    	MainView mainView = new MainView(primaryStage);
-    	mainView.show();
+//    	MainView mainView = new MainView(primaryStage);
+//    	mainView.show();
     }
 
     public static void main(String[] args) {
