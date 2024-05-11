@@ -61,8 +61,8 @@ public class MainView extends VBox {
         searchBtn.setOnAction(event -> showSearchView());
         
         // Button for viewing expired assets
-        searchBtn = new Button("View Expired Assets");
-        searchBtn.setOnAction(event -> viewExpAssets());
+        expWarBtn = new Button("View Expired Assets");
+        expWarBtn.setOnAction(event -> viewExpAssets());
         
         //Button for exiting application
         exit = new Button("Exit");
@@ -71,12 +71,12 @@ public class MainView extends VBox {
 		});
 
         // Create UI layout
-        this.getChildren().addAll(label, assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, exit);
+        this.getChildren().addAll(label, assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn,expWarBtn, exit);
         this.setAlignment(Pos.CENTER);
         
 
         // Set the preferred width for each Button to the maximum width
-        Stream.of(assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, exit )
+        Stream.of(assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, expWarBtn, exit )
               .forEach(button -> button.setPrefWidth(200));
 
         // Set the scene

@@ -44,6 +44,17 @@ public class AssetsListView extends VBox{
     public AssetsListView(Stage primaryStage) {
     	super(10);
     	this.primaryStage = primaryStage;
+    	
+//TRY refreshing the page to show edits made when the Stage gets focus back
+//        primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//        	assetTable.refreshView();
+//        	assetTable.refresh();
+//        });
+
+//        primaryStage.setOnShown(event -> {
+//        	assetTable.refreshView();
+//        	assetTable.refresh();
+//        });
     }
     
     public void show() {
