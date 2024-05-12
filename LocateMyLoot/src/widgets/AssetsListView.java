@@ -2,16 +2,24 @@ package widgets;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import application.Asset;
 import application.AssetHelper;
+import application.CSVHelper;
+import application.Category;
+import application.Location;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.DialogPane;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -23,6 +31,12 @@ public class AssetsListView extends VBox{
 	private Button editBtn;
 	private Button delBtn;
 	
+	private ComboBox<String> comboCategory = new ComboBox<>();
+	private ComboBox<String> comboLocation = new ComboBox<>();
+	
+	private Label categoryLabel = new Label("Category");
+	private Label locationLabel = new Label("Location");
+	
 	Stage primaryStage;
 	
 	List<Asset> assets;
@@ -30,17 +44,29 @@ public class AssetsListView extends VBox{
     public AssetsListView(Stage primaryStage) {
     	super(10);
     	this.primaryStage = primaryStage;
+    	
+//TRY refreshing the page to show edits made when the Stage gets focus back
+//        primaryStage.focusedProperty().addListener((observable, oldValue, newValue) -> {
+//        	assetTable.refreshView();
+//        	assetTable.refresh();
+//        });
+
+//        primaryStage.setOnShown(event -> {
+//        	assetTable.refreshView();
+//        	assetTable.refresh();
+//        });
     }
     
     public void show() {
     	
         this.setAlignment(Pos.CENTER);
         
-    	assetTable = new AssetTableView();
-    	List<Asset> assets = AssetHelper.readAssetsFromCSV();
-    	assetTable.setAssets(assets);
-    	assetTable.refreshView();
 
+    	// initialize filtering combo boxes
+    	initializeComboBoxes();
+    	HBox filterBox = new HBox(10);
+    	filterBox.getChildren().addAll(categoryLabel,comboCategory,locationLabel,comboLocation);
+    	filterBox.setAlignment(Pos.CENTER);
         
     	backBtn = new Button("Back");
         // Store scene and create back button to go back
@@ -57,7 +83,11 @@ public class AssetsListView extends VBox{
 		btnBox.getChildren().addAll(editBtn, delBtn, backBtn);
 		btnBox.setAlignment(Pos.CENTER);
 		
-		this.getChildren().addAll(assetTable,btnBox );
+		//now create the TabelView and Populate the Values
+    	assetTable = new AssetTableView();
+    	populateAseetsInTableView();
+    	
+    	this.getChildren().addAll(filterBox, assetTable,btnBox );
 
 		Scene scene = new Scene(this, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT);
         primaryStage.setScene(scene);
@@ -113,5 +143,76 @@ public class AssetsListView extends VBox{
 
         return result;
     }
+    
+    private void initializeComboBoxes() {
+    	
+    	//Populate the Category ComboBox
+    	// Get the Categories from the csv file
+    	List<Category> categories = CSVHelper.CSVtoCategories(Category.CATEGORIES_FILENAME);
+    	// Create a list of items
+        ObservableList<String> categoryItems = FXCollections.observableArrayList();
+        categoryItems.add("All");
+        for(Category cat : categories) {
+        	categoryItems.add(cat.getName());
+        }
+        comboCategory.setItems(categoryItems);
+        // Set a default selection (optional)
+        comboCategory.getSelectionModel().selectFirst();
+        
+        comboCategory.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        	populateAseetsInTableView();
+        });
+        
+    	//Populate the Location ComboBox
+    	// Get the Categories from the csv file
+    	List<Location> locations = CSVHelper.CSVtoLocations(Location.LOCATIONS_FILENAME);
+    	// Create a list of items
+        ObservableList<String> locationItems = FXCollections.observableArrayList();
+        locationItems.add("All");
+        for(Location loc : locations) {
+        	locationItems.add(loc.getName());
+        }
+        comboLocation.setItems(locationItems);
+        // Set a default selection (optional)
+        comboLocation.getSelectionModel().selectFirst();
+        
+        comboLocation.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        	populateAseetsInTableView();
+        });
+    }
+    
+    private void populateAseetsInTableView() {
+    	List<Asset> assets = AssetHelper.readAssetsFromCSV();
+    	
+    	//filter assets based on Filer selection on Location and Category
+    	String selectedCategory = comboCategory.getValue();
+    	String selectedLocation = comboLocation.getValue();
+    	List<Asset> filteredAssets = assets.stream()
+                .filter(asset -> isCategoryMatch(asset, selectedCategory))
+                .filter(asset -> isLocationMatch(asset, selectedLocation))
+                .collect(Collectors.toList());
+    	
+    	assetTable.setAssets(filteredAssets);
+    	assetTable.refreshView();
+    }
+    
+    private boolean isCategoryMatch(Asset asset, String selectedCategory) {
+        // If "All" is selected, return true for all assets
+        if ("All".equals(selectedCategory)) {
+            return true;
+        }
+        // Otherwise, match the category name
+        String categoryName = asset.getCategory().getName();
+        return categoryName.equals(selectedCategory);
+    }
 
+    private boolean isLocationMatch(Asset asset, String selectedLocation) {
+        // If "All" is selected, return true for all assets
+        if ("All".equals(selectedLocation)) {
+            return true;
+        }
+        // Otherwise, match the location name
+        String locationName= asset.getLocation().getName();
+        return locationName.equals(selectedLocation);
+    }
 }
