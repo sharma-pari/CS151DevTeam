@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 public class MainView extends VBox {
 	
 	public static final int MAIN_WINDOW_WIDTH = 1000;
-	public static final int MAIN_WINDOW_HEIGHT = 500;
+	public static final int MAIN_WINDOW_HEIGHT = 550;
 	
 	private Stage primaryStage;
 	private Label label;
@@ -24,7 +24,6 @@ public class MainView extends VBox {
 	private Button defLocBtn;
 	private Button defAssBtn;
 	private Button searchBtn;
-	private Button expWarBtn;
 	private Button exit;
 	
 	public MainView(Stage primaryStage) {
@@ -60,10 +59,6 @@ public class MainView extends VBox {
         searchBtn = new Button("Search Asset");
         searchBtn.setOnAction(event -> showSearchView());
         
-        // Button for viewing expired assets
-        expWarBtn = new Button("View Expired Assets");
-        expWarBtn.setOnAction(event -> viewExpAssets());
-        
         //Button for exiting application
         exit = new Button("Exit");
 		exit.setOnAction(e -> {
@@ -71,12 +66,12 @@ public class MainView extends VBox {
 		});
 
         // Create UI layout
-        this.getChildren().addAll(label, assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn,expWarBtn, exit);
+        this.getChildren().addAll(label, assetBtn, searchBtn, defCatBtn, defLocBtn, defAssBtn, exit);
         this.setAlignment(Pos.CENTER);
         
 
         // Set the preferred width for each Button to the maximum width
-        Stream.of(assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, expWarBtn, exit )
+        Stream.of(assetBtn, defCatBtn, defLocBtn, defAssBtn, searchBtn, exit )
               .forEach(button -> button.setPrefWidth(200));
 
         // Set the scene
@@ -108,7 +103,7 @@ public class MainView extends VBox {
     
     //Show AssetView
     private void showAssetView(String attribute) {
-        AssetView assetView = new AssetView(primaryStage);
+        AssetView assetView = new AssetView(primaryStage, true);
         assetView.show();
     }
     
@@ -118,9 +113,5 @@ public class MainView extends VBox {
     	search.show();
     }    
     
-    // Shows assets by attributes
-    private void viewExpAssets() {
-    	WarningPopUp wpu = new WarningPopUp(primaryStage);
-    	wpu.showExpiredView(); 
-    }
+   
 }

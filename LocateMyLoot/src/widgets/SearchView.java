@@ -26,6 +26,7 @@ public class SearchView extends VBox {
 	private Label warning;
 	private TextField searchtext;
 	private AssetTableView searchResultsView;
+	private Button viewBtn;
 	private Button backBtn;
 	private Button edit;
 	private Button del;
@@ -64,15 +65,18 @@ public class SearchView extends VBox {
     	
 		searchResultsView = new AssetTableView();
 		
+		viewBtn = new Button("View");
+	    viewBtn.setOnAction(event -> editviewAction(false));
+		
 		edit = new Button("Edit");
-    	edit.setOnAction(event -> editAction());
+    	edit.setOnAction(event -> editviewAction(true));
     	
     	del = new Button("Delete");
     	del.setOnAction(event -> deleteAction());
 		
 		
 		HBox btnBox = new HBox(10);
-		btnBox.getChildren().addAll(searchResultsView,edit, del, backBtn);
+		btnBox.getChildren().addAll(searchResultsView,viewBtn, edit, del, backBtn);
 		btnBox.setAlignment(Pos.CENTER);
 
     	
@@ -95,11 +99,11 @@ public class SearchView extends VBox {
 		}
 	}
 	
-	private void editAction() {
+	private void editviewAction(Boolean editable) {
 		TableRowData selectedRowData = searchResultsView.getSelectionModel().getSelectedItem();
 		Asset selectedAsset = selectedRowData.getAsset();
 		if (selectedAsset != null) {
-	        AssetView defRoot = new AssetView(primaryStage);
+	        AssetView defRoot = new AssetView(primaryStage, editable);
 	        defRoot.setAsset(selectedAsset);
 	        defRoot.setAlignment(Pos.CENTER);
 	        primaryStage.setScene(new Scene(defRoot, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT));

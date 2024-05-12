@@ -47,10 +47,21 @@ public class AssetView extends VBox {
     private Asset asset = null;
     private Asset prevAsset = null;
 
-    public AssetView(Stage primaryStage) {
+    public AssetView(Stage primaryStage, Boolean editable) {
         super(10);
         this.primaryStage = primaryStage;
         
+        txtName.setEditable(editable);
+    	desc.setEditable(editable);
+        locComboBox.setEditable(editable);
+        catComboBox.setEditable(editable);
+        purDateDP.setEditable(editable);
+        purVal.setEditable(editable);
+        warExpDP.setEditable(editable);
+        
+        if(!editable) {
+        	defLabel = new Label("Asset's information:");
+        }
         createView();
     }
     

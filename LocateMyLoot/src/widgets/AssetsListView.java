@@ -1,5 +1,7 @@
 package widgets;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,18 +26,26 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+
 public class AssetsListView extends VBox{
+	private Label instructLabel = new Label("Select asset in table and then use buttons to view/edit/delete");
 	
 	private AssetTableView assetTable;
+	private Button viewBtn;
 	private Button backBtn;
 	private Button editBtn;
 	private Button delBtn;
 	
 	private ComboBox<String> comboCategory = new ComboBox<>();
 	private ComboBox<String> comboLocation = new ComboBox<>();
+	private ComboBox<String> comboExpired = new ComboBox<>();
+
 	
 	private Label categoryLabel = new Label("Category");
 	private Label locationLabel = new Label("Location");
+	private Label expiredLabel = new Label("Expiry Status");
+	
+	private Boolean startWithExpired = false;
 	
 	Stage primaryStage;
 	
@@ -57,6 +67,14 @@ public class AssetsListView extends VBox{
 //        });
     }
     
+    public AssetsListView(Stage primaryStage, Boolean isExpired) {
+    	super(10);
+    	this.primaryStage = primaryStage;
+    	startWithExpired = isExpired;
+    	
+    	
+    }
+    
     public void show() {
     	
         this.setAlignment(Pos.CENTER);
@@ -65,7 +83,7 @@ public class AssetsListView extends VBox{
     	// initialize filtering combo boxes
     	initializeComboBoxes();
     	HBox filterBox = new HBox(10);
-    	filterBox.getChildren().addAll(categoryLabel,comboCategory,locationLabel,comboLocation);
+    	filterBox.getChildren().addAll(categoryLabel,comboCategory,locationLabel,comboLocation, expiredLabel, comboExpired);
     	filterBox.setAlignment(Pos.CENTER);
         
     	backBtn = new Button("Back");
@@ -73,21 +91,24 @@ public class AssetsListView extends VBox{
         Scene previousScene = primaryStage.getScene();
         backBtn.setOnAction(event -> primaryStage.setScene(previousScene));
         
+        viewBtn = new Button("View");
+        viewBtn.setOnAction(event -> editviewAction(false));
+        
 		editBtn = new Button("Edit");
-    	editBtn.setOnAction(event -> editAction());
+    	editBtn.setOnAction(event -> editviewAction(true));
     	
     	delBtn = new Button("Delete");
     	delBtn.setOnAction(event -> deleteAction());
     	
 		HBox btnBox = new HBox(10);
-		btnBox.getChildren().addAll(editBtn, delBtn, backBtn);
+		btnBox.getChildren().addAll(viewBtn, editBtn, delBtn, backBtn);
 		btnBox.setAlignment(Pos.CENTER);
 		
 		//now create the TabelView and Populate the Values
     	assetTable = new AssetTableView();
     	populateAseetsInTableView();
     	
-    	this.getChildren().addAll(filterBox, assetTable,btnBox );
+    	this.getChildren().addAll(instructLabel, filterBox, assetTable,btnBox );
 
 		Scene scene = new Scene(this, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT);
         primaryStage.setScene(scene);
@@ -96,11 +117,11 @@ public class AssetsListView extends VBox{
     }
     
     
-	private void editAction() {
+	private void editviewAction(boolean editable) {
 		TableRowData selectedRowData = assetTable.getSelectionModel().getSelectedItem();
 		Asset selectedAsset = selectedRowData.getAsset();
 		if (selectedAsset != null) {
-	        AssetView defRoot = new AssetView(primaryStage);
+	        AssetView defRoot = new AssetView(primaryStage, editable);
 	        defRoot.setAsset(selectedAsset);
 	        defRoot.setAlignment(Pos.CENTER);
 	        primaryStage.setScene(new Scene(defRoot, MainView.MAIN_WINDOW_WIDTH, MainView.MAIN_WINDOW_HEIGHT));
@@ -179,17 +200,33 @@ public class AssetsListView extends VBox{
         comboLocation.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
         	populateAseetsInTableView();
         });
+        
+        ObservableList<String> expiredItems = FXCollections.observableArrayList();
+        expiredItems.add("All");
+        expiredItems.add("Expired");
+        
+        comboExpired.setItems(expiredItems);
+        comboExpired.getSelectionModel().selectFirst();
+        if(startWithExpired) {
+        	comboExpired.getSelectionModel().selectLast();
+        }
+        
+        comboExpired.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        	populateAseetsInTableView();
+        });
     }
     
     private void populateAseetsInTableView() {
     	List<Asset> assets = AssetHelper.readAssetsFromCSV();
-    	
+    	LocalDate currentDate = LocalDate.now();
     	//filter assets based on Filer selection on Location and Category
     	String selectedCategory = comboCategory.getValue();
     	String selectedLocation = comboLocation.getValue();
+    	String selectedExpired = comboExpired.getValue();
     	List<Asset> filteredAssets = assets.stream()
                 .filter(asset -> isCategoryMatch(asset, selectedCategory))
                 .filter(asset -> isLocationMatch(asset, selectedLocation))
+                .filter(asset -> isExpiredMatch(asset, selectedExpired, currentDate))
                 .collect(Collectors.toList());
     	
     	assetTable.setAssets(filteredAssets);
@@ -214,5 +251,23 @@ public class AssetsListView extends VBox{
         // Otherwise, match the location name
         String locationName= asset.getLocation().getName();
         return locationName.equals(selectedLocation);
+    }
+    
+    private boolean isExpiredMatch(Asset asset, String selectedLocation, LocalDate currentDate) {
+        // If "All" is selected, return true for all assets
+        if ("All".equals(selectedLocation)) {
+            return true;
+        }
+        // Otherwise, compare the expired date
+        
+        if (asset.getWarExDate() != null && !asset.getWarExDate().isEmpty()) {
+          LocalDate warrantyExpiryDate = LocalDate.parse(asset.getWarExDate());
+          if (currentDate.isAfter(warrantyExpiryDate)) {
+        	  return true;
+          }
+          return false;
+        }
+        return false;
+        
     }
 }

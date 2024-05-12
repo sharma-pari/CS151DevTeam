@@ -62,7 +62,7 @@ public class WarningPopUp extends VBox {
     
     // Show ExpiredView
     public void showExpiredView() {
-        ExpiredView expiredView = new ExpiredView(primaryStage, checkForExpiredWarranties());
+    	AssetsListView expiredView = new AssetsListView(primaryStage, true);
         expiredView.show();
     }
     
