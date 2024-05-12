@@ -53,14 +53,18 @@ public class AssetView extends VBox {
         
         txtName.setEditable(editable);
     	desc.setEditable(editable);
-        locComboBox.setEditable(editable);
-        catComboBox.setEditable(editable);
+        locComboBox.getEditor().setEditable(editable);
+        catComboBox.getEditor().setEditable(editable);
         purDateDP.setEditable(editable);
         purVal.setEditable(editable);
         warExpDP.setEditable(editable);
         
         if(!editable) {
         	defLabel = new Label("Asset's information:");
+        	locComboBox.setOnShown(event -> locComboBox.hide());
+        	catComboBox.setOnShown(event -> catComboBox.hide());
+        	purDateDP.setOnShown(event -> purDateDP.hide());
+        	warExpDP.setOnShown(event -> warExpDP.hide());
         }
         createView();
     }
